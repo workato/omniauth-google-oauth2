@@ -1,6 +1,7 @@
 [![Gem Version](https://badge.fury.io/rb/omniauth-google-oauth2.svg)](https://badge.fury.io/rb/omniauth-google-oauth2)
 [![Build Status](https://travis-ci.org/zquestz/omniauth-google-oauth2.png)](https://travis-ci.org/zquestz/omniauth-google-oauth2)
 
+# Workato fork note. This is a 0.4.1 + e3cbdc5 commit from the original repo to avoid using Google+ api
 # OmniAuth Google OAuth2 Strategy
 
 Strategy to authenticate with Google via OAuth2 in OmniAuth.

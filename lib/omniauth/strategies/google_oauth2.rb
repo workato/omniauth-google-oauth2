@@ -9,6 +9,7 @@ module OmniAuth
       BASE_SCOPE_URL = "https://www.googleapis.com/auth/"
       BASE_SCOPES = %w[profile email openid]
       DEFAULT_SCOPE = "email,profile"
+      USER_INFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo'.freeze
 
       option :name, 'google_oauth2'
       option :skip_friends, true
@@ -74,21 +75,11 @@ module OmniAuth
             }).first
         end
         hash[:raw_info] = raw_info unless skip_info?
-        hash[:raw_friend_info] = raw_friend_info(raw_info['sub']) unless skip_info? || options[:skip_friends]
-        hash[:raw_image_info] = raw_image_info(raw_info['sub']) unless skip_info? || options[:skip_image_info]
         prune! hash
       end
 
       def raw_info
-        @raw_info ||= access_token.get('https://www.googleapis.com/plus/v1/people/me/openIdConnect').parsed
-      end
-
-      def raw_friend_info(id)
-        @raw_friend_info ||= access_token.get("https://www.googleapis.com/plus/v1/people/#{id}/people/visible").parsed
-      end
-
-      def raw_image_info(id)
-        @raw_image_info ||= access_token.get("https://www.googleapis.com/plus/v1/people/#{id}?fields=image").parsed
+        @raw_info ||= access_token.get(USER_INFO_URL).parsed
       end
 
       def custom_build_access_token
@@ -190,7 +181,7 @@ module OmniAuth
 
       def verify_hd(access_token)
         return true unless options.hd
-        @raw_info ||= access_token.get('https://www.googleapis.com/plus/v1/people/me/openIdConnect').parsed
+        @raw_info ||= access_token.get(USER_INFO_URL).parsed
         allowed_hosted_domains = Array(options.hd)
 
         raise CallbackError.new(:invalid_hd, "Invalid Hosted Domain") unless allowed_hosted_domains.include? @raw_info['hd']
